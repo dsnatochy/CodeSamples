@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CodeSamples</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <color name="green">#00FF00</color>
+    <color name="gray">#CCCCCC</color>
+    <string name="title_activity_transaction_list">TransactionList</string>
+    <string name="title_activity_login">LoginActivity</string>
+</resources>
