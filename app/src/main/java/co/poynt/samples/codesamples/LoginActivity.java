@@ -6,20 +6,16 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
-import java.util.Set;
 
 import co.poynt.os.Constants;
 
@@ -58,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id==android.R.id.home) {
+        if (id == android.R.id.home) {
             finish();
         }
 
@@ -66,8 +62,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginClicked(View view) {
-        accountManager.getAuthToken(Constants.Accounts.POYNT_UNKNOWN_ACCOUNT,
-                Constants.Accounts.POYNT_AUTH_TOKEN, null, LoginActivity.this,
+        Bundle options = new Bundle();
+        options.putBoolean("OPTION_VERIFY_ONLY", true);
+        options.putString("LOCKPIN", "1234");
+        Account account = new Account("Sam", "co.poynt");
+        accountManager.getAuthToken(account,
+                Constants.Accounts.POYNT_AUTH_TOKEN, options, LoginActivity.this,
                 new OnUserLoginAttempt(), null);
     }
 
