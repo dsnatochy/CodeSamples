@@ -7,3 +7,7 @@
 /captures
 .idea/**
 *.impl
+app/src/main/java/co/poynt/samples/codesamples/ScannerActivity.java
+app/src/main/java/co/poynt/samples/codesamples/receivers/*
+app/src/main/java/co/poynt/samples/codesamples/services/CheckinIntentService.java
+app/src/main/java/co/poynt/samples/codesamples/utils/MyCaptureActivity.java
