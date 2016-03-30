@@ -35,5 +35,49 @@
         android:text="Terminal User Login"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:id="@+id/terminalUserLoginBtn" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:background="@color/gray"
+        android:text="OrderService Examples"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/orderBtn" />
+
+    <Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textAlignment="center"
+    android:background="@color/gray"
+    android:text="TokenService Example"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:id="@+id/tokenServiceBtn" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:background="@color/gray"
+        android:text="Payment Fragment Examples"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/paymentFragmentBtn" />
+<!--
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:background="@color/gray"
+        android:text="Scanner Activity"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/scannerActivityBtn" />
+-->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:background="@color/gray"
+        android:text="Second Screen Service Activity"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/secondScreenServiceActivityBtn" />
 
 </LinearLayout>

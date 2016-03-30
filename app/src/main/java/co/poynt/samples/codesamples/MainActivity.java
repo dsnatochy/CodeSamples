@@ -1,17 +1,22 @@
 package co.poynt.samples.codesamples;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private Button transactionListBtn;
     private Button terminalUserLoginBtn;
-    @Override
+    private Button orderBtn;
+    private Button tokenServiceBtn;
+    private Button paymentFragmentBtn;
+    private Button scannerActivityBtn;
+    private Button secondScreenServiceActivityBtn;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -28,6 +33,51 @@ public class MainActivity extends AppCompatActivity {
         terminalUserLoginBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        orderBtn = (Button) findViewById(R.id.orderBtn);
+        orderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OrderActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        tokenServiceBtn = (Button) findViewById(R.id.tokenServiceBtn);
+        tokenServiceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, TokenServiceActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        paymentFragmentBtn = (Button) findViewById(R.id.paymentFragmentBtn);
+        paymentFragmentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
+                startActivity(intent);
+            }
+        });
+
+//        scannerActivityBtn = (Button) findViewById(R.id.scannerActivityBtn);
+//        scannerActivityBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent (MainActivity.this, ScannerActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
+        secondScreenServiceActivityBtn = (Button) findViewById(R.id.secondScreenServiceActivityBtn);
+        secondScreenServiceActivityBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent (MainActivity.this, SecondScreenServiceActivity.class);
                 startActivity(intent);
             }
         });

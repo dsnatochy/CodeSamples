@@ -9,12 +9,20 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="Validate Login"
         android:id="@+id/loginBtn"
         android:layout_alignParentStart="true"
+        android:onClick="onVerifyLoginClicked"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login as Another User"
+        android:id="@+id/loginUserBtn"
+        android:layout_toEndOf="@+id/loginBtn"
         android:onClick="onLoginClicked"/>
 
-    <TextView android:text="User:"
+    <TextView android:text="Current User:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/labelTextView"
@@ -30,5 +38,21 @@
         android:layout_alignTop="@+id/labelTextView"
         android:layout_marginLeft="15dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ScrollView
+        android:id="@+id/demoScroller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userTextView"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/consoleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:typeface="monospace"
+            android:hint="User token info will appear here."/>
+    </ScrollView>
 
 </RelativeLayout>

@@ -2,11 +2,11 @@ package co.poynt.samples.codesamples;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
@@ -16,14 +16,13 @@ import java.util.Calendar;
 import co.poynt.api.model.FundingSourceType;
 import co.poynt.api.model.TransactionStatus;
 import co.poynt.os.contentproviders.orders.transactionamounts.TransactionamountsColumns;
-import co.poynt.os.contentproviders.orders.transactions.TransactionsColumns;
 import co.poynt.os.contentproviders.orders.transactions.TransactionsCursor;
 
 /**
  * Created by dennis on 1/29/16.
  */
 public class TransactionCursorAdapter extends CursorAdapter {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM DD hh:mm");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd hh:mm");
     Calendar calendar = Calendar.getInstance();
 
     public TransactionCursorAdapter(Context context, Cursor c, boolean autoRequery) {

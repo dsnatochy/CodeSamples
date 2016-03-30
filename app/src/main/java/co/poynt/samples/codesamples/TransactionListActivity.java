@@ -1,11 +1,10 @@
 package co.poynt.samples.codesamples;
 
+import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.Cursor;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,7 +13,8 @@ import android.widget.ListView;
 
 import co.poynt.os.contentproviders.orders.transactions.TransactionsColumns;
 
-public class TransactionListActivity extends AppCompatActivity
+
+public class TransactionListActivity extends Activity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "TxnListActivity";
     private ListView transactionListview;
@@ -25,12 +25,12 @@ public class TransactionListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_list);
 
-        ActionBar actionBar = getSupportActionBar();
+        android.app.ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         transactionListview = (ListView) findViewById(R.id.transaction_list_view);
 
-        getSupportLoaderManager().initLoader(URL_LOADER, null, this);
+        getLoaderManager().initLoader(URL_LOADER, null, this);
 
     }
 
@@ -73,14 +73,13 @@ public class TransactionListActivity extends AppCompatActivity
         return null;
     }
 
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-//        Log.d(TAG, "onLoadFinished ");
+    @Override
+    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
         TransactionFilterCursorWrapper cursorWrapper = new TransactionFilterCursorWrapper(data, true);
         TransactionCursorAdapter adapter = new TransactionCursorAdapter(this, cursorWrapper, false);
         transactionListview.setAdapter(adapter);
     }
 
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 }

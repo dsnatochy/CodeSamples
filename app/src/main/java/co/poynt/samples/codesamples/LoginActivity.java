@@ -6,38 +6,50 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+
+import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 
 import java.io.IOException;
-import java.util.Set;
+import java.text.ParseException;
+import java.util.Map;
 
 import co.poynt.os.Constants;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
 
     private AccountManager accountManager;
     private static final String TAG = LoginActivity.class.getName();
     private TextView userView;
+    private TextView consoleText;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar !=null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         accountManager = AccountManager.get(this);
         userView = (TextView) findViewById(R.id.userTextView);
+        consoleText = (TextView) findViewById(R.id.consoleText);
     }
 
     @Override
@@ -66,9 +78,52 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginClicked(View view) {
+        Log.d(TAG, "onLoginClicked called");
         accountManager.getAuthToken(Constants.Accounts.POYNT_UNKNOWN_ACCOUNT,
                 Constants.Accounts.POYNT_AUTH_TOKEN, null, LoginActivity.this,
                 new OnUserLoginAttempt(), null);
+    }
+    public void onVerifyLoginClicked(View view) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle("Login");
+        final View dialogView = getLayoutInflater().inflate(R.layout.login_dialog, null);
+        dialog.setView(dialogView);
+
+        Account [] accounts = accountManager.getAccountsByType(Constants.Accounts.POYNT_ACCOUNT_TYPE);
+        String [] users = new String[accounts.length];
+        for (int i=0; i< accounts.length; i++) {
+            users[i] = accounts[i].name;
+        }
+
+        Spinner _spinner = (Spinner) dialogView.findViewById(R.id.userSpinner);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, R.layout.simple_spinner_dropdown_item, users);
+        _spinner.setAdapter(spinnerArrayAdapter);
+        final Spinner spinner = _spinner;
+        final EditText pinText = (EditText) dialogView.findViewById(R.id.pinText);
+
+        dialog.setPositiveButton("Login", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String selectedUser = spinner.getSelectedItem().toString();
+                Account selectedAccount = new Account(selectedUser, Constants.Accounts.POYNT_ACCOUNT_TYPE);
+                String PIN = pinText.getText().toString();
+
+                Bundle options = new Bundle();
+                options.putBoolean("OPTION_VERIFY_ONLY", true);
+                options.putString("LOCKPIN", PIN);
+                accountManager.getAuthToken(selectedAccount, Constants.Accounts.POYNT_AUTH_TOKEN, options,
+                        false, new OnUserLoginAttempt(), null);
+            }
+        });
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+                Toast.makeText(LoginActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.show();
+
+//        Toast.makeText(LoginActivity.this, spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
     }
 
     public class OnUserLoginAttempt implements AccountManagerCallback<Bundle> {
@@ -76,8 +131,15 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 Bundle bundle = accountManagerFuture.getResult();
                 String user = (String) bundle.get(AccountManager.KEY_ACCOUNT_NAME);
-                userView.setText(user);
-                Toast.makeText(LoginActivity.this, "User " + user + " successfully logged in", Toast.LENGTH_LONG).show();
+                String authToken = (String) bundle.get(AccountManager.KEY_AUTHTOKEN);
+                if (authToken != null) {
+                   // Log.d(TAG, "authtoken: " + authToken);
+                    displayAccessTokenInfo(authToken);
+                    Toast.makeText(LoginActivity.this, "User " + user + " successfully logged in", Toast.LENGTH_LONG).show();
+                    userView.setText(user);
+                }else{
+                    Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                }
             } catch (OperationCanceledException e) {
                 e.printStackTrace();
                 Toast.makeText(LoginActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
@@ -86,6 +148,69 @@ public class LoginActivity extends AppCompatActivity {
             } catch (AuthenticatorException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void displayAccessTokenInfo(String accessToken){
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(accessToken);
+
+            StringBuilder claimsBuffer = new StringBuilder();
+            ReadOnlyJWTClaimsSet claims = signedJWT.getJWTClaimsSet();
+
+            claimsBuffer.append("Subject: " + claims.getSubject())
+                    .append("\nType: " + claims.getType())
+                    .append("\nIssuer: " + claims.getIssuer())
+                    .append("\nJWT ID: " + claims.getJWTID())
+                    .append("\nIssueTime : " + claims.getIssueTime())
+                    .append("\nExpiration Time: " + claims.getExpirationTime())
+                    .append("\nNot Before Time: " + claims.getNotBeforeTime());
+            for (String audience : claims.getAudience()) {
+                claimsBuffer.append("\nAudience: " + audience);
+            }
+
+            Map<String, Object> customClaims = claims.getCustomClaims();
+            for (Map.Entry<String, Object> entry : customClaims.entrySet()) {
+                String key = entry.getKey();
+                switch (key) {
+                    case "poynt.did":
+                        key += " (Device ID)";
+                        break;
+                    case "poynt.biz":
+                        key += " (Business ID)";
+                        break;
+                    case "poynt.ist":
+                        key += " (Issued To)";
+                        break;
+                    case "poynt.sct":
+                        key += " (Subject Credential Type [J=JWT, E=EMAIL, U=USERNAME])";
+                        break;
+                    case "poynt.str":
+                        key += " (Store ID)";
+                        break;
+                    case "poynt.kid":
+                        key += " (Key ID)";
+                        break;
+                    case "poynt.ure":
+                        key += " (User Role [O=Owner, E=Employee])";
+                        break;
+                    case "poynt.uid":
+                        key += " (Poynt User ID)";
+                        break;
+                    case "poynt.scv":
+                        key += " (Subject Credential Value)";
+                        break;
+                    default:
+                        break;
+                }
+
+                claimsBuffer.append("\n" + key + ": " + entry.getValue());
+            }
+            final String claimsStr = claimsBuffer.toString();
+            Log.d(TAG, "claims: " + claimsStr);
+            consoleText.setText(claimsStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 }

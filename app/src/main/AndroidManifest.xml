@@ -2,10 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="co.poynt.samples.codesamples" >
 
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-
     <uses-permission android:name="co.poynt.orders.ACCESS_ORDERS" />
-
+    <uses-permission android:name="poynt.permission.ORDER_SERVICE" />
+    <uses-permission android:name="poynt.permission.TOKEN_SERVICE" />
+    <uses-permission android:name="poynt.permission.TRANSACTION_SERVICE" />
+    <uses-permission android:name="poynt.permission.CUSTOMER_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="poynt.permission.SECOND_SCREEN_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -29,6 +35,72 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
+        <activity
+            android:name=".OrderActivity"
+            android:label="@string/title_activity_order" >
+        </activity>
+        <activity
+            android:name=".TokenServiceActivity"
+            android:label="@string/title_activity_token_service" >
+        </activity>
+
+        <receiver
+            android:name=".MyCloudMessageReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="poynt.intent.action.CLOUD_MESSAGE_RECEIVED" />
+
+                <category android:name="poynt.category.CLOUD_MESSAGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".PaymentActivity"
+            android:label="@string/title_activity_payment" >
+        </activity>
+        <activity
+            android:name=".ScannerActivity"
+            android:label="@string/title_activity_scanner" >
+        </activity>
+        <activity
+            android:name=".utils.MyCaptureActivity"
+            android:label="@string/title_activity_my_capture"
+            android:parentActivityName="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppCompatCaptureTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.journeyapps.barcodescanner.CaptureActivity" />
+        </activity>
+        <activity
+            android:name=".SecondScreenServiceActivity"
+            android:label="@string/title_activity_second_screen_service" >
+        </activity>
+
+        <service
+            android:name=".services.CheckinIntentService"
+            android:exported="false" >
+        </service>
+
+        <receiver
+            android:name=".receivers.MyBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+
+                <!-- <action android:name="poynt.intent.action.ADD_PRODUCT_TO_CART" /> -->
+                <action android:name="com.poynt.samples.checkin" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receivers.TestReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.poynt.codesamples.ADD_PRODUCT_TO_CART"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
