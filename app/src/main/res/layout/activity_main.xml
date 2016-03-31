@@ -80,4 +80,13 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:id="@+id/secondScreenServiceActivityBtn" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:background="@color/gray"
+        android:text="Receipt Printing Service Activity"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/receiptPrintingServiceActivityBtn" />
+
 </LinearLayout>

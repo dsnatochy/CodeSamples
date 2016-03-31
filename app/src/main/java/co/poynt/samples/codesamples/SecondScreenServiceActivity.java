@@ -40,6 +40,7 @@ public class SecondScreenServiceActivity extends Activity {
     @Bind(R.id.checkInScreenBtn) Button checkInScreenBtn;
     @Bind(R.id.emailBtn) Button emailBtn;
     @Bind(R.id.textEntryBtn) Button textEntryBtn;
+    @Bind(R.id.printImageBtn) Button printImageBtn;
     private IPoyntSecondScreenService secondScreenService;
     private ServiceConnection secondScreenServiceConnection = new ServiceConnection() {
         @Override
@@ -273,4 +274,6 @@ public class SecondScreenServiceActivity extends Activity {
             e.printStackTrace();
         }
     }
+
+
 }

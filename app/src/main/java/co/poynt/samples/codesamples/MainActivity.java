@@ -16,6 +16,7 @@ public class MainActivity extends Activity {
     private Button paymentFragmentBtn;
     private Button scannerActivityBtn;
     private Button secondScreenServiceActivityBtn;
+    private Button receiptPrintingServiceActivityBtn;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +79,15 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent (MainActivity.this, SecondScreenServiceActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        receiptPrintingServiceActivityBtn = (Button) findViewById(R.id.receiptPrintingServiceActivityBtn);
+        receiptPrintingServiceActivityBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ReceiptPrintingServiceActivity.class);
                 startActivity(intent);
             }
         });
