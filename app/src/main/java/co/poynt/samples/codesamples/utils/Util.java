@@ -79,7 +79,7 @@ public class Util {
         item1.setUnitPrice(100l);
         item1.setQuantity(1.0f);
         item1.setUnitOfMeasure(UnitOfMeasure.EACH);
-        item1.setStatus(OrderItemStatus.ORDERED);
+        item1.setStatus(OrderItemStatus.FULFILLED);
         item1.setTax(0l);
         items.add(item1);
 
@@ -90,7 +90,7 @@ public class Util {
         item2.setQuantity(1.0f);
         item2.setTax(0l);
         item2.setUnitOfMeasure(UnitOfMeasure.EACH);
-        item2.setStatus(OrderItemStatus.ORDERED);
+        item2.setStatus(OrderItemStatus.FULFILLED);
         items.add(item2);
 
 
@@ -99,7 +99,7 @@ public class Util {
         item3.setName("Item3");
         item3.setUnitPrice(100l);
         item3.setQuantity(2.0f);
-        item3.setStatus(OrderItemStatus.ORDERED);
+        item3.setStatus(OrderItemStatus.FULFILLED);
         item3.setUnitOfMeasure(UnitOfMeasure.EACH);
         item3.setTax(0l);
         items.add(item3);
@@ -123,7 +123,7 @@ public class Util {
         order.setAmounts(amounts);
 
         OrderStatuses orderStatuses = new OrderStatuses();
-        orderStatuses.setStatus(OrderStatus.OPENED);
+        orderStatuses.setStatus(OrderStatus.COMPLETED);
         order.setStatuses(orderStatuses);
         order.setId(UUID.randomUUID());
         return order;
