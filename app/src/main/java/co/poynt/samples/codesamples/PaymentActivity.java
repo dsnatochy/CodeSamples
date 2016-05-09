@@ -69,7 +69,6 @@ public class PaymentActivity extends Activity {
     private IPoyntTransactionService mTransactionService;
 
     private IPoyntOrderService mOrderService;
-    private IPoyntCustomerService mCustomerService;
 
     private Transaction transaction;
 
@@ -101,31 +100,6 @@ public class PaymentActivity extends Activity {
         }
     };
 
-    /*
-     * Class for interacting with Customer service
-     */
-    private ServiceConnection mCustomerServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            mCustomerService = IPoyntCustomerService.Stub.asInterface(iBinder);
-            Log.d(TAG, "PoyntCustomerService is now connected");
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            Log.d(TAG, "PoyntCustomerService disconnected");
-        }
-    };
-    private IPoyntCustomerReadListener customerServiceListener = new IPoyntCustomerReadListener.Stub(){
-        @Override
-        public void onResponse(Customer customer, PoyntError poyntError) throws RemoteException {
-            if (customer != null){
-                for (Map.Entry pair : customer.getEmails().entrySet()) {
-                    Log.d(TAG, "CustomerReadListener: " + pair.getKey() + ": " + pair.getValue());
-                }
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,8 +119,7 @@ public class PaymentActivity extends Activity {
             }
         });
 
-        // disable the button until transaction service is connected (this was used for the refund use case)
-        chargeBtn.setEnabled(false);
+        chargeBtn.setEnabled(true);
 
         payOrderBtn = (Button) findViewById(R.id.payOrderBtn);
         payOrderBtn.setOnClickListener(new View.OnClickListener() {
@@ -227,13 +200,13 @@ public class PaymentActivity extends Activity {
             String transactionJson = gson.toJson(transaction, transactionType);
             Log.d(TAG, "onResponse: " + transactionJson);
 
-            transaction = _transaction;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    chargeBtn.setEnabled(true);
-                }
-            });
+//            transaction = _transaction;
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    chargeBtn.setEnabled(true);
+//                }
+//            });
         }
 
         //@Override
@@ -251,10 +224,10 @@ public class PaymentActivity extends Activity {
 //        }
 
     };
-    public void getTransaction(){
+    public void getTransaction(String txnId){
         try {
 
-            mTransactionService.getTransaction("81e649c2-3d79-42dc-aa33-eaf255acf49d", UUID.randomUUID().toString(),
+            mTransactionService.getTransaction(txnId, UUID.randomUUID().toString(),
                     mTransactionServiceListener);
 //                    mTransactionService.getTransaction("7f1629ae-c7f0-4bb2-9693-233236b191f3", UUID.randomUUID().toString(),
 //                            mTransactionServiceListener);
@@ -278,7 +251,6 @@ public class PaymentActivity extends Activity {
 //                mTokenServiceConnection, Context.BIND_AUTO_CREATE);
         bindService(new Intent(IPoyntTransactionService.class.getName()),
                 mTransactionServiceConnection, Context.BIND_AUTO_CREATE);
-        bindService(new Intent(IPoyntCustomerService.class.getName()), mCustomerServiceConnection, Context.BIND_AUTO_CREATE);
 
     }
     @Override
@@ -291,12 +263,10 @@ public class PaymentActivity extends Activity {
 //        unbindService(mCapabilityManagerConnection);
 //        unbindService(mTokenServiceConnection);
         unbindService(mTransactionServiceConnection);
-        unbindService(mCustomerServiceConnection);
     }
     private ServiceConnection mTransactionServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mTransactionService = IPoyntTransactionService.Stub.asInterface(iBinder);
-            getTransaction();
         }
         public void onServiceDisconnected(ComponentName componentName) {
             mTransactionService = null;
@@ -395,15 +365,14 @@ public class PaymentActivity extends Activity {
                         new SaveOrderTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, payment.getOrder());
                     }
 
-                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    Gson gson = new Gson();
                     Type paymentType = new TypeToken<Payment>(){}.getType();
                     Log.d(TAG, gson.toJson(payment, paymentType));
                     for (Transaction t : payment.getTransactions()) {
-                        try {
-                            mCustomerService.getCustomer(t.getCustomerUserId(), customerServiceListener);
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
+
+
+                        getTransaction(t.getId().toString());
                         //Log.d(TAG, "Card token: " + t.getProcessorResponse().getCardToken());
                         FundingSourceAccountType fsAccountType = t.getFundingSource().getAccountType();
                         if (t.getFundingSource().getCard() != null){
