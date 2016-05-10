@@ -1,8 +1,10 @@
 package co.poynt.samples.codesamples;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
@@ -24,10 +26,13 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.Map;
+import java.util.Properties;
 
 import co.poynt.api.model.TokenResponse;
 import co.poynt.os.model.PoyntError;
@@ -37,8 +42,9 @@ import co.poynt.samples.codesamples.utils.Util;
 
 public class TokenServiceActivity extends Activity {
     private static final String TAG = TokenServiceActivity.class.getName();
-    // your app id
-    private String appId = "urn:aid:b32fb540-e730-42b9-9b1d-c131087d1dcd";
+    // the app id issued to you when you upload the apk to poynt.net
+    // add it to src/main/assets/config.properties (on Android Studio)
+    private String appId;
     private Button getTokenBtn;
     private Button verifyJwtBtn;
     private TextView textView;
@@ -187,6 +193,7 @@ public class TokenServiceActivity extends Activity {
         });
         // download Poynt certificate to be used for JWT signature verification
         new GetCertTask().execute();
+        loadConfig();
     }
 
     @Override
@@ -243,5 +250,33 @@ public class TokenServiceActivity extends Activity {
                 Toast.makeText(TokenServiceActivity.this, "Getting certificate failed", Toast.LENGTH_SHORT).show();
             }
         }
-    };
+    }
+
+    /*
+     * loads applications appId from a properties file
+     */
+    private void loadConfig() {
+        try {
+            for (String s: getAssets().list(".")) {
+                Log.d(TAG, "loadConfig " + s );
+            }
+            InputStream is = getAssets().open("config.properties");
+            Properties props = new Properties();
+            props.load(is);
+            appId = props.getProperty("appId");
+            Log.d(TAG, "loaded appId: " + appId.toString());
+        } catch (IOException|NullPointerException e) {
+            e.printStackTrace();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Please set \"appId\" property in src/main/assets/config.properties");
+            builder.setTitle("Unable to initialize appId");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int id) {
+                    finish();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
 }
