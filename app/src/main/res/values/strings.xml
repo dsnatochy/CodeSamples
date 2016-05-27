@@ -17,4 +17,5 @@
     <string name="title_activity_my_capture">MyCaptureActivity</string>
     <string name="title_activity_second_screen_service">SecondScreenServiceActivity</string>
     <string name="title_activity_receipt_printing_service">ReceiptPrintingServiceActivity</string>
+    <string name="title_activity_product_service">ProductServiceActivity</string>
 </resources>
