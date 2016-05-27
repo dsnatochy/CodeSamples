@@ -83,48 +83,6 @@ public class LoginActivity extends Activity {
                 Constants.Accounts.POYNT_AUTH_TOKEN, null, LoginActivity.this,
                 new OnUserLoginAttempt(), null);
     }
-    public void onVerifyLoginClicked(View view) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-
-        dialog.setTitle("Login");
-        final View dialogView = getLayoutInflater().inflate(R.layout.login_dialog, null);
-        dialog.setView(dialogView);
-
-        Account [] accounts = accountManager.getAccountsByType(Constants.Accounts.POYNT_ACCOUNT_TYPE);
-        String [] users = new String[accounts.length];
-        for (int i=0; i< accounts.length; i++) {
-            users[i] = accounts[i].name;
-        }
-
-        Spinner _spinner = (Spinner) dialogView.findViewById(R.id.userSpinner);
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, R.layout.simple_spinner_dropdown_item, users);
-        _spinner.setAdapter(spinnerArrayAdapter);
-        final Spinner spinner = _spinner;
-        final EditText pinText = (EditText) dialogView.findViewById(R.id.pinText);
-
-        dialog.setPositiveButton("Login", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String selectedUser = spinner.getSelectedItem().toString();
-                Account selectedAccount = new Account(selectedUser, Constants.Accounts.POYNT_ACCOUNT_TYPE);
-                String PIN = pinText.getText().toString();
-
-                Bundle options = new Bundle();
-                options.putBoolean("OPTION_VERIFY_ONLY", true);
-                options.putString("LOCKPIN", PIN);
-                accountManager.getAuthToken(selectedAccount, Constants.Accounts.POYNT_AUTH_TOKEN, options,
-                        false, new OnUserLoginAttempt(), null);
-            }
-        });
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int which){
-                Toast.makeText(LoginActivity.this, "Login canceled", Toast.LENGTH_SHORT).show();
-            }
-        });
-        dialog.show();
-
-//        Toast.makeText(LoginActivity.this, spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
-    }
 
     public class OnUserLoginAttempt implements AccountManagerCallback<Bundle> {
         public void run(AccountManagerFuture<Bundle> accountManagerFuture) {
