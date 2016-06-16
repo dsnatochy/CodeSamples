@@ -40,7 +40,7 @@ public class SecondScreenServiceActivity extends Activity {
     @Bind(R.id.checkInScreenBtn) Button checkInScreenBtn;
     @Bind(R.id.emailBtn) Button emailBtn;
     @Bind(R.id.textEntryBtn) Button textEntryBtn;
-    @Bind(R.id.printImageBtn) Button printImageBtn;
+    //@Bind(R.id.printImageBtn) Button printImageBtn;
     private IPoyntSecondScreenService secondScreenService;
     private ServiceConnection secondScreenServiceConnection = new ServiceConnection() {
         @Override
@@ -102,7 +102,7 @@ public class SecondScreenServiceActivity extends Activity {
     @OnClick(R.id.emailBtn)
     public void emailBtnclicked(View view){
         try {
-            secondScreenService.collectEmailAddress("Enter email: ", emailEntryListener);
+            secondScreenService.collectEmailAddress(null, emailEntryListener);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
