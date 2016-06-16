@@ -15,17 +15,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import co.poynt.os.model.PrintedReceipt;
+import co.poynt.os.model.PrintedReceiptLine;
+import co.poynt.os.model.PrinterStatus;
 import co.poynt.os.services.v1.IPoyntReceiptPrintingService;
 import co.poynt.os.services.v1.IPoyntReceiptPrintingServiceListener;
 
 public class ReceiptPrintingServiceActivity extends Activity {
     private final static String TAG = "ReceiptPrintingActivity";
     @Bind(R.id.printImageBtn) Button printImageBtn;
+    @Bind(R.id.printReceiptBtn) Button printReceiptBtn;
 
 
     private IPoyntReceiptPrintingService receiptPrintingService;
@@ -105,7 +111,7 @@ public class ReceiptPrintingServiceActivity extends Activity {
     @OnClick(R.id.printImageBtn)
     public void printImage(){
         String jobId = UUID.randomUUID().toString();
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.receipt);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.receipt3);
         if (receiptPrintingService != null){
             try {
                 receiptPrintingService.printBitmap(jobId, bitmap, receiptPrintingServiceListener);
@@ -113,5 +119,70 @@ public class ReceiptPrintingServiceActivity extends Activity {
                 e.printStackTrace();
             }
         }
+    }
+
+    @OnClick(R.id.printReceiptBtn)
+    public void printReceipt(){
+        String jobId = UUID.randomUUID().toString();
+        PrintedReceipt receipt = generateReceipt();
+        if (receiptPrintingService != null){
+            try {
+                receiptPrintingService.printReceipt(jobId, receipt, receiptPrintingServiceListener);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private PrintedReceipt generateReceipt(){
+        PrintedReceipt printedReceipt = new PrintedReceipt();
+
+        // BODY
+        List<PrintedReceiptLine> body = new ArrayList<PrintedReceiptLine>();
+
+        body.add(newLine(" Check-in REWARD  "));
+        body.add(newLine(""));
+        body.add(newLine("FREE Reg. 1/2 Order"));
+        body.add(newLine("Nachos or CHEESE"));
+        body.add(newLine("Quesadilla with min."));
+        body.add(newLine("$ 15 bill."));
+        body.add(newLine(".................."));
+        body.add(newLine("John Doe"));
+        body.add(newLine("BD: May-5, AN: Aug-4"));
+        body.add(newLine("john.doe@gmail.com"));
+        body.add(newLine("Visit #23"));
+        body.add(newLine("Member since: 15 June 2013"));
+        body.add(newLine(".................."));
+        body.add(newLine("Apr-5-2013 3:25 PM"));
+        body.add(newLine("Casa Orozco, Dublin, CA"));
+        body.add(newLine(".................."));
+        body.add(newLine("Coupon#: 1234-5678"));
+        body.add(newLine(" Check-in REWARD  "));
+        body.add(newLine(""));
+        body.add(newLine("FREE Reg. 1/2 Order"));
+        body.add(newLine("Nachos or CHEESE"));
+        body.add(newLine("Quesadilla with min."));
+        body.add(newLine("$ 15 bill."));
+        body.add(newLine(".................."));
+        body.add(newLine("John Doe"));
+        body.add(newLine("BD: May-5, AN: Aug-4"));
+        body.add(newLine("john.doe@gmail.com"));
+        body.add(newLine("Visit #23"));
+        body.add(newLine("Member since: 15 June 2013"));
+        body.add(newLine(".................."));
+        body.add(newLine("Apr-5-2013 3:25 PM"));
+        body.add(newLine("Casa Orozco, Dublin, CA"));
+        body.add(newLine(".................."));
+        body.add(newLine("Coupon#: 1234-5678"));
+        body.add(newLine("  Powered by Poynt"));
+        printedReceipt.setBody(body);
+
+        return printedReceipt;
+    }
+
+    private PrintedReceiptLine newLine(String s){
+        PrintedReceiptLine line = new PrintedReceiptLine();
+        line.setText(s);
+        return line;
     }
 }
