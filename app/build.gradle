@@ -25,28 +25,11 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    //compile 'com.android.support:appcompat-v7:23.1.1'
-    // Poynt Dependencies
-    // r51 dependencies
-//    compile 'co.poynt.api:android-api-model:1.2.32@jar'
-//    compile 'co.poynt.android.sdk:poynt-sdk:1.2.8@aar'
-
-    // r73 dependencies
-//    compile 'co.poynt.api:android-api-model:1.2.35@jar'
-//    compile 'co.poynt.android.sdk:poynt-sdk:1.2.9-SNAPSHOT@aar'
-
-    // r77
-//    compile 'co.poynt.api:android-api-model:1.2.36@jar'
-//    compile 'co.poynt.android.sdk:poynt-sdk:1.2.10@aar'
-
-    // r81 dependencies and onward
-    compile 'co.poynt.api:android-api-model:1.2.44@jar'
-    compile 'co.poynt.android.sdk:poynt-sdk:1.2.11@aar'
 
 
     // r93 dependencies and onward
-//    compile 'co.poynt.api:android-api-model:1.2.56@jar'
-//    compile 'co.poynt.android.sdk:poynt-sdk:1.2.13@aar'
+    compile 'co.poynt.api:android-api-model:1.2.56@jar'
+    compile 'co.poynt.android.sdk:poynt-sdk:1.2.13@aar'
     compile 'com.google.code.gson:gson:2.4'
 
     // JWT dependencies - if you want to parse JWTs
